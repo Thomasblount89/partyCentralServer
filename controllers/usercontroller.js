@@ -1,41 +1,26 @@
 const { UniqueConstraintError } = require('sequelize/lib/errors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const {UserModel} = require('../models');
+const {models} = require('../models');
 const router = require('express').Router();
-
-// get user by ID
-router.get('/:id', async (req, res) => {
-    try{
-        const userId = await UserModel.findAll({
-            where: {
-                id:req.params.id// make sure property name makes the database column title. 
-            }
-        });
-        
-     res.status(200).json(userId)
-    } catch (err) {
-        res.status(500).json ({
-            message:`Failed to retrieve ID: ${err}`
-        })
-    }
-})
 
 //register 
 router.post("/register", async (req, res) => {
     const { firstName,
         lastName,
         email,
-        password
+        password,
+        role
     } = req.body;
 
     try {
-        const newUser = await UserModel.create(
+        const newUser = await models.UserModel.create(
             {
                 firstName,
                 lastName,
                 email,
                 password: bcrypt.hashSync(password, 10),
+                role
             });
 
         const token = jwt.sign({
@@ -71,7 +56,7 @@ router.post('/login', async (req,res) => {
     } = req.body;
 
     try {
-        let loginUser = await UserModel.findOne ({
+        loginUser = await models.UserModel.findOne ({
             where: {
                 email
             }
@@ -102,10 +87,74 @@ router.post('/login', async (req,res) => {
         }
     } catch (err) {
         res.status(500).json({
-            message: 'Error loggin in!'
+            message: 'Error logging in!'
         });
     }
 })
+
+// get user by all
+router.get('/', async (req, res) => {
+ 
+    try{
+         const allUsersInfo = await models.UserModel.findAll({});
+        
+     res.status(200).json({
+        user: allUsersInfo
+     })
+
+    } catch (err) {
+        res.status(500).json ({
+            message:`Failed to retrieve allUsersInfo: ${err}`
+        })
+    }
+})
+
+// get user by Id
+router.get('/id/:id', async (req, res) => {
+ 
+    try{
+         const host = await models.UserModel.findAll({
+            where: {
+                id: req.params.id// make sure property name matches the database column title. 
+            }
+        });
+        
+     res.status(200).json({
+        user: host
+     })
+
+    } catch (err) {
+        res.status(500).json ({
+            message:`Failed to retrieve ID: ${err}`
+        })
+    }
+})
+
+// get user by name
+router.get('/name/:firstName', async (req, res) => {
+ 
+    try{
+         const host = await models.UserModel.findAll({
+            where: {
+                firstName: req.params.firstName,
+                // lastName: req.params.lastName
+                // make sure property name matches the database column title. 
+            }
+        });
+        
+     res.status(200).json({
+       
+        user: host
+  
+     })
+
+    } catch (err) {
+        res.status(500).json ({
+            message:`Failed to retrieve ID: ${err}`
+        })
+    }
+})
+
     
 
 
