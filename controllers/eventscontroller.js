@@ -7,21 +7,26 @@ const {models} = require("../models");
 
 
 //GET ALL of Host's Events
-router.get("/allEvents", validateSession, async (req, res) => {
+router.get("/:hostId", validateSession, async (req, res) => {
   try {
-    await models.EventsModel.findAll({
-      events: req.params.events,
+
+    const allHostsEvents = await models.EventsModel.findAll({
+      
+    where: {
+          hostId: req.params.hostId
+      }
     });
+   
     res.status(200).json({
-      events: events,
-      message: "Captured Events!",
+      events: allHostsEvents
     });
+
   } catch (err) {
     res.status(500).json({
-      message: `Failed to retrieve Events: ${err}`,
+      message: `Failed to retrieve all of Host's Events: ${err}`,
     });
   }
-}); // we also created a host id - will be used for when a user is looking their own events. this creates a slot in the table to locate those events as associated with the host. we can use the where property in this case.
+});
 
 //Create Event
 router.post("/createevent", async (req, res) => {
@@ -54,7 +59,7 @@ router.post("/createevent", async (req, res) => {
   }
 });
 
-router.put("/:id", validateSession, async (req, res) => {
+router.put("/edit/:id", validateSession, async (req, res) => {
   const {
        eventTitle,
         eventTime, 
@@ -81,15 +86,16 @@ router.put("/:id", validateSession, async (req, res) => {
 });
 
 router.delete("/:id", validateSession, async (req, res) => {
-    console.log(req)
+
     try{
-        await models.EventsModel.destroy({
+       const deleteEvent = await models.EventsModel.destroy({
             where: {
                 id: req.params.id
             }
         })
         res.status(200).json({
-            message: "Events Destroyed"
+          message: 'event destroyed',
+            events: deleteEvent
         })
     } catch (err) {
         res.status(500).json({

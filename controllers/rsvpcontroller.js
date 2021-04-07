@@ -2,58 +2,80 @@ const { models } = require("../models");
 const validateSession = require("../middleware/validateSession");
 const router = require("express").Router();
 
-// fetch RSVP by Id
-router.get("/fetchrsvp/:id", validateSession, async  function getRsvp() {
-  rsvp = {dish:dish, rsvp:rsvp}
-  try {
-      res = await fetch(rsvp);
-      return await res.json(); 
-    } catch (err) {
-      res.status(500).json({
-          message: 'Error fetching rsvp'
+// fetch RSVP by Id?  
+router.get('/id/:id', async (req, res) => {
+ 
+  try{
+       const RsvpById = await models.RsvpModel.findOne({
+          where: {
+              id: req.params.id
+          }
       });
+      
+   res.status(200).json({
+      Rsvp: RsvpById
+   })
+
+  } catch (err) {
+      res.status(500).json ({
+          message:`Failed to retrieve RsvpId: ${err}`
+      })
   }
 })
 
 // Create Rsvp
-router.post("/creatersvp", async (req, res) => {
+router.post("/creatersvp", validateSession, async (req, res) => {
   const {
-    dish,
-    rsvp,
+    Dish,
+    Rsvp,
+    HostId
+  } = req.body;
   
-  } = req.body.rsvp;
 
   try {
     await models.RsvpModel.create({
-      dish: dish,
-      rsvp: rsvp,
+      Dish: Dish,
+      Rsvp: Rsvp,
+      HostId: HostId
     });
+    console.log(Dish)
 
     res.status(201).json({
       message: "New Rsvp Created!",
+      Dish: Dish,
+      Rsvp: Rsvp
+
   
     });
   } catch (err) {
+    console.log(err)
     res.status(500).json({
       message: `Failed to create a new Rsvp: ${err}`,
     });
   }
 });
 
-router.put("/:id", validateSession, async (req, res) => {
+//update rsvp
+router.put("/edit/:id", validateSession, async (req, res) => {
   const {
-    dish,
-    rsvp, } = req.body.rsvp;
+    Dish,
+    Rsvp,
+    HostId
+  } = req.body;
   try {
-    models.rsvpModel.update(
+    models.RsvpModel.update(
       {
-        dish: dish,
-        rsvp: rsvp,
+        Dish: Dish,
+        Rsvp: Rsvp,
+        HostId: HostId
       },
       { where: { id: req.params.id } }
     );
     res.status(200).json({
-      message: "rsvp successfully updated"
+      message: "rsvp successfully updated",
+      Dish: Dish,
+      Rsvp: Rsvp,
+      HostId: HostId
     });
   } catch (err) {
     res.status(500).json({
@@ -62,15 +84,17 @@ router.put("/:id", validateSession, async (req, res) => {
   }
 });
 
-router.delete('/:id', validateSession, async (req, res) => {
+// delete rsvp
+router.delete('/id/:id', validateSession, async (req, res) => {
     try{
-        await models.rsvpModel.destroy({
+      const deleteRsvp =  await models.RsvpModel.destroy({
             where: {
                 id: req.params.id
             }
         })
         res.status(200).json({
-            message: "Rsvp Destroyed"
+            message: "Rsvp Destroyed",
+            Rsvp: deleteRsvp
         })
     } catch (err) {
         res.status(500).json({

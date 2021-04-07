@@ -150,7 +150,7 @@ router.get('/name/:firstName', async (req, res) => {
 
     } catch (err) {
         res.status(500).json ({
-            message:`Failed to retrieve ID: ${err}`
+            message:`Failed to retrieve info by users name: ${err}`
         })
     }
 })
