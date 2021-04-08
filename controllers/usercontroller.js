@@ -3,6 +3,8 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const {models} = require('../models');
 const router = require('express').Router();
+const { validateSession } = require("../middleware");
+
 
 //register 
 router.post("/register", async (req, res) => {
@@ -154,6 +156,35 @@ router.get('/name/:firstName', async (req, res) => {
         })
     }
 })
+
+router.delete("/delete/:id", validateSession, async (req, res) => {
+
+    try{
+    
+        if(req.user.role === true){
+            const deleteUser = await models.UserModel.destroy({
+                where: {
+                    id: req.params.id
+                }
+                
+            })
+            res.status(200).json({
+              message: 'user destroyed',
+                user: deleteUser
+            })
+        }else{
+            res.status(402).json({
+                message: 'reserved for admin only',
+               
+              })
+        }
+      
+    } catch (err) {
+        res.status(500).json({
+            message: `Unable to Destroy User: ${err}`
+        })
+    }
+});
 
     
 

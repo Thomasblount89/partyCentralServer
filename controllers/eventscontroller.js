@@ -85,7 +85,8 @@ router.put("/edit/:id", validateSession, async (req, res) => {
   }
 });
 
-router.delete("/:id", validateSession, async (req, res) => {
+//delete by id
+router.delete("/delete/:id", validateSession, async (req, res) => {
 
     try{
        const deleteEvent = await models.EventsModel.destroy({
