@@ -1,5 +1,5 @@
 module.exports = {
-    usercontroller: require('./usercontroller')
-    // eventcontroller: require('./eventcontroller')
-    // rsvpcontroller: require('./rsvpcontroller')
+    usercontroller: require('./usercontroller'),
+    eventscontroller: require('./eventscontroller'),
+    rsvpcontroller: require('./rsvpcontroller')
 }
