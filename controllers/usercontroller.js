@@ -160,7 +160,7 @@ router.get('/name/:firstName', async (req, res) => {
 router.delete("/delete/:id", validateSession, async (req, res) => {
 
     try{
-    
+            //admin role validation to delete a user... but need to build a fetch on the front-end to display users to admin role
         if(req.user.role === true){
             const deleteUser = await models.UserModel.destroy({
                 where: {
