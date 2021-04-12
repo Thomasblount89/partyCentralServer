@@ -14,6 +14,8 @@ router.get("/:hostId", validateSession, async (req, res) => {
       
     where: {
           hostId: req.params.hostId
+          //userId: req.params.userId
+          // figure out why the userID is null... ?  
       }
     });
    
