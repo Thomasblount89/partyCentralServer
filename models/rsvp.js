@@ -8,18 +8,22 @@ const Rsvp = db.define("rsvp", {
     defaultValue: DataTypes.UUIDV4,
     allowNull: false,
   },
-  Dish: {
+  dish: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  Rsvp: {
+  rsvp: {
     type: DataTypes.BOOLEAN,
     allowNull: false,
   },
-  HostId: {
-    type: DataTypes.INTEGER,
+  userId: {
+    type: DataTypes.UUID,
     allowNull: false,
   },
+  eventId: {
+    type: DataTypes.UUID,
+    allowNull: false,
+  }
 });
 
 module.exports = Rsvp;

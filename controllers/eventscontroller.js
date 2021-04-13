@@ -46,7 +46,8 @@ router.post("/createevent", async (req, res) => {
       eventTime: eventTime,
       eventDate: eventDate,
       eventLocation: eventLocation,
-      hostId: hostId
+      hostId: hostId,
+      
     });
 
     res.status(201).json({
@@ -54,7 +55,7 @@ router.post("/createevent", async (req, res) => {
       eventTitle: eventTitle,
     });
   } catch (err) {
-    //   console.log(err)
+      console.log(err)
     res.status(500).json({
       message: `Failed to create a new Event: ${err}`,
     });

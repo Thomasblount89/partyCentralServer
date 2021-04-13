@@ -11,8 +11,7 @@ router.post("/register", async (req, res) => {
     const { firstName,
         lastName,
         email,
-        password,
-        role
+        password
     } = req.body;
 
     try {
@@ -21,8 +20,7 @@ router.post("/register", async (req, res) => {
                 firstName,
                 lastName,
                 email,
-                password: bcrypt.hashSync(password, 10),
-                role
+                password: bcrypt.hashSync(password, 10)
             });
 
         const token = jwt.sign({
@@ -157,6 +155,39 @@ router.get('/name/:firstName', async (req, res) => {
     }
 })
 
+//update user
+router.put("/edit/:id", validateSession, async (req, res) => {
+    const { firstName,
+        lastName,
+        email,
+        password,
+    role  } = req.body;
+    try {
+      models.UserModel.update(
+        {
+            firstName:firstName,
+            lastName:lastName,
+            email:email,
+            password:password,
+            role:role
+        },
+        { where: { id: req.params.id } }
+      );
+      res.status(200).json({
+        message: "user info successfully updated",
+        firstName:firstName,
+        lastName:lastName,
+        email:email,
+        password:password,
+        role:role
+      });
+    } catch (err) {
+      res.status(500).json({
+        message: `Failed to update event: ${err}`,
+      });
+    }
+  });
+
 router.delete("/delete/:id", validateSession, async (req, res) => {
 
     try{
@@ -166,7 +197,6 @@ router.delete("/delete/:id", validateSession, async (req, res) => {
                 where: {
                     id: req.params.id
                 }
-                
             })
             res.status(200).json({
               message: 'user destroyed',
@@ -174,8 +204,7 @@ router.delete("/delete/:id", validateSession, async (req, res) => {
             })
         }else{
             res.status(402).json({
-                message: 'reserved for admin only',
-               
+                message: 'reserved for admin only'
               })
         }
       

@@ -7,11 +7,33 @@ const RsvpModel = require("./rsvp")
 UserModel.hasMany(EventsModel);
 UserModel.hasMany(RsvpModel);
 
-EventsModel.belongsTo(UserModel);
+
+// EventsModel.belongsTo(UserModel);
+EventsModel.belongsTo(UserModel, {
+  foreignKey: {
+    name: 'hostId'
+  }
+});
+
 EventsModel.hasMany(RsvpModel);
 
-RsvpModel.belongsTo(UserModel);
-RsvpModel.belongsTo(EventsModel);
+// RsvpModel.belongsTo(UserModel);
+RsvpModel.belongsTo(UserModel, {
+  foreignKey: {
+    name: 'userId'
+  }
+});
+
+// RsvpModel.belongsTo(EventsModel);
+RsvpModel.belongsTo(EventsModel, {
+  foreignKey: {
+    name: 'eventId'
+  }
+});
+
+
+
+
 
 
 
