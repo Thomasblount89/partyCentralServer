@@ -25,8 +25,8 @@ const Events = db.define ('events' , {
         type: DataTypes.STRING,
         allowNull: false
     },
-        hostId: {
-        type: DataTypes.INTEGER,
+    hostId: {
+        type: DataTypes.UUID,
         allowNull: false
     }
 })

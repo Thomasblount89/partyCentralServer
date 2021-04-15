@@ -6,7 +6,6 @@ const dbConnection = require("./db");
 const controllers = require("./controllers");
 const middleware = require('./middleware');
 
-
 app.use(Express.json());
 app.use(middleware.CORS);
 app.use("/user", controllers.usercontroller);
@@ -15,7 +14,7 @@ app.use('/rsvp', controllers.rsvpcontroller)
 
 dbConnection
   .authenticate()
-  .then(() => dbConnection.sync({}))
+  .then(() => dbConnection.sync())  
   .then(() => {
     app.listen(process.env.PORT, () => {
       console.log(`[Server]: App is listening on ${process.env.PORT}`);

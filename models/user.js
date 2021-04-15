@@ -27,7 +27,8 @@ const User = db.define("user", {
   },
   role: {
     type: DataTypes.BOOLEAN,
-    allowNull: false,
+    defaultValue: false,
+    allowNull: false
   },
 });
 module.exports = User;
