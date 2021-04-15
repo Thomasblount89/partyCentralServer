@@ -3,7 +3,26 @@ const { validateSession } = require("../middleware");
 const {models} = require("../models");
 // const { models } = require("../models");
 
+// get events by all
+router.get('/', validateSession , async (req, res) => {
+ 
+  try{
+       const allEvents = await models.EventsModel.findAll({
+         include: [
+           models.UserModel
+         ]
+       });
+      
+   res.status(200).json({
+      events: allEvents
+   })
 
+  } catch (err) {
+      res.status(500).json ({
+          message:`Failed to retrieve all the events: ${err}`
+      })
+  }
+})
 
 
 //GET ALL of Host's Events
