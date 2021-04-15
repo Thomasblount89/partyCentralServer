@@ -4,24 +4,17 @@ const Express = require("express");
 const app = Express();
 const dbConnection = require("./db");
 const controllers = require("./controllers");
-
+const middleware = require('./middleware');
 
 app.use(Express.json());
+app.use(middleware.CORS);
 app.use("/user", controllers.usercontroller);
-
-
-// app.use(Express.static(__dirname + '/public'));
-// console.log(__dirname);
-
-// app.get('/', (req, res) => res.render ('index'));
-
-// app.use()
-// app.use()
-// app.use()
+app.use('/events', controllers.eventscontroller)
+app.use('/rsvp', controllers.rsvpcontroller)
 
 dbConnection
   .authenticate()
-  .then(() => dbConnection.sync())
+  .then(() => dbConnection.sync())  
   .then(() => {
     app.listen(process.env.PORT, () => {
       console.log(`[Server]: App is listening on ${process.env.PORT}`);
