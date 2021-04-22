@@ -110,20 +110,28 @@ router.put("/edit/:id", validateSession, async (req, res) => {
 //delete by id
 router.delete("/delete/:id", validateSession, async (req, res) => {
 
-    try{
-       const deleteEvent = await models.EventsModel.destroy({
-            where: {
-                id: req.params.id
-            }
+  try {
+    if(req.user.role === true){
+      const deleteEvent = await models.UserModel.destroy({
+          where: {
+              id: req.params.id
+          }
+      })
+      res.status(200).json({
+        message: 'Event destroyed',
+          user: deleteEvent
+      })
+  }else{
+      res.status(402).json({
+          message: 'reserved for admin only'
         })
-        res.status(200).json({
-          message: 'event destroyed',
-            events: deleteEvent
-        })
-    } catch (err) {
-        res.status(500).json({
-            message: `Unable to Destroy Event: ${err}`
-        })
-    }
-});
+  }
+  
+  } catch (err) {
+  res.status(500).json({
+      message: `Unable to Destroy Event: ${err}`
+  })
+  }
+  });
+  
 module.exports = router;
