@@ -112,14 +112,14 @@ router.delete("/delete/:id", validateSession, async (req, res) => {
 
   try {
     if(req.user.role === true){
-      const deleteEvent = await models.UserModel.destroy({
+      const deleteEvent = await models.EventsModel.destroy({
           where: {
               id: req.params.id
           }
       })
       res.status(200).json({
         message: 'Event destroyed',
-          user: deleteEvent
+          event: deleteEvent
       })
   }else{
       res.status(402).json({

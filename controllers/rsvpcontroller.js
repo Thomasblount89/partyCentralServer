@@ -2,27 +2,22 @@ const { models } = require("../models");
 const validateSession = require("../middleware/validateSession");
 const router = require("express").Router();
 
-
-// get rsvp by all 
-router.get('/', validateSession , async (req, res) => {
-  try{
+// get rsvp by all
+router.get("/", validateSession, async (req, res) => {
+  try {
     const allRsvps = await models.RsvpModel.findAll({
-      include: [
-        models.UserModel,
-        models.EventsModel
-      ]
+      include: [models.UserModel, models.EventsModel],
     });
-   
-res.status(200).json({
-   events: allRsvps
-})
 
-} catch (err) {
-   res.status(500).json ({
-       message:`Failed to retrieve all the rsvps: ${err}`
-   })
-}
-})
+    res.status(200).json({
+      rsvps: allRsvps,
+    });
+  } catch (err) {
+    res.status(500).json({
+      message: `Failed to retrieve all the rsvps: ${err}`,
+    });
+  }
+});
 
 // fetch rsvp by Id?
 router.get("/id/:id", async (req, res) => {
@@ -45,14 +40,17 @@ router.get("/id/:id", async (req, res) => {
 
 // Create rsvp
 router.post("/creatersvp/:eventId", validateSession, async (req, res) => {
-  const { dish, rsvp, userId, eventId } = req.body;
+  const { 
+    dish, 
+    rsvp,
+    } = req.body;
 
   try {
     await models.RsvpModel.create({
       dish: dish,
       rsvp: rsvp,
       userId: req.user.id,
-      eventId: req.params.eventId
+      eventId: req.params.eventId,
     });
     console.log(dish);
 
@@ -78,7 +76,7 @@ router.put("/edit/:id", validateSession, async (req, res) => {
         dish: dish,
         rsvp: rsvp,
         userId: userId,
-        eventId: eventId
+        eventId: eventId,
       },
       { where: { id: req.params.id } }
     );
@@ -87,7 +85,7 @@ router.put("/edit/:id", validateSession, async (req, res) => {
       dish: dish,
       rsvp: rsvp,
       userId: userId,
-      eventId: eventId
+      eventId: eventId,
     });
   } catch (err) {
     res.status(500).json({
@@ -98,29 +96,27 @@ router.put("/edit/:id", validateSession, async (req, res) => {
 
 // delete rsvp
 router.delete("/delete/id/:id", validateSession, async (req, res) => {
-
   try {
-  if(req.user.role === true){
-    const deleteRsvp = await models.UserModel.destroy({
+    if (req.user.role === true) {
+      const deleteRsvp = await models.RsvpModel.destroy({
         where: {
-            id: req.params.id
-        }
-    })
-    res.status(200).json({
-      message: 'Rsvp destroyed',
-        user: deleteRsvp
-    })
-}else{
-    res.status(402).json({
-        message: 'reserved for admin only'
-      })
-}
-
-} catch (err) {
-res.status(500).json({
-    message: `Unable to Destroy Rsvp: ${err}`
-})
-}
+          id: req.params.id,
+        },
+      });
+      res.status(200).json({
+        message: "Rsvp destroyed",
+        rsvp: deleteRsvp,
+      });
+    } else {
+      res.status(402).json({
+        message: "reserved for admin only",
+      });
+    }
+  } catch (err) {
+    res.status(500).json({
+      message: `Unable to Destroy Rsvp: ${err}`,
+    });
+  }
 });
 
 module.exports = router;
