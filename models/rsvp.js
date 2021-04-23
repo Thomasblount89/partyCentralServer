@@ -12,10 +12,7 @@ const Rsvp = db.define("rsvp", {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  rsvp: {
-    type: DataTypes.BOOLEAN,
-    allowNull: false,
-  },
+
   userId: {
     type: DataTypes.UUID,
     allowNull: false,
